@@ -2,11 +2,15 @@ module.exports = function (RED) {
     function MicrosoftEmailNode(config) {
         RED.nodes.createNode(this, config);
         var node = this;
-
+        const clientId = this.credentials.clientId;
+        const clientSecret = this.credentials.clientSecret;
+        const tenantId = this.credentials.tenantId;
         node.on('input', async function (msg) {
             try {
-                node.warn("Belépési értéket");
-                node.warn(msg.payload);
+                /*var username = this.credentials.username;
+                var password = this.credentials.password;
+                node.warn(username);
+                node.warn(password);*/
 
                 // Get access token
                 const accessToken = await getAccessToken(msg);
@@ -25,13 +29,10 @@ module.exports = function (RED) {
         });
 
         async function getAccessToken(input) {
-            const clientId = input.payload.clientId;
-            const clientSecret = input.payload.clientSecret;
-            const tenantId = input.payload.tenantId;
+
             const scope = "https://graph.microsoft.com/.default";
             const url = `https://login.microsoftonline.com/${tenantId}/oauth2/v2.0/token`;
 
-            node.warn("Ide is bejutok");
             const payload = new URLSearchParams({
                 client_id: clientId,
                 scope: scope,
@@ -50,7 +51,6 @@ module.exports = function (RED) {
             });
             
             const data = await response.json();
-            node.warn(data);
             return data.access_token;
         }
 
@@ -89,5 +89,11 @@ module.exports = function (RED) {
         }
     }
 
-    RED.nodes.registerType("microsoft-email", MicrosoftEmailNode);
+    RED.nodes.registerType("microsoft-email", MicrosoftEmailNode,{
+        credentials: {
+            clientId: {type:"text"},
+            tenantId: {type:"text"},
+            clientSecret: {type:"password"}
+        }
+    });
 };

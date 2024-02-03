@@ -10,7 +10,12 @@
         icon: "envelope.svg",
         label: function() {
             return this.name||"microsoft-email";
-        }
+        },
+        credentials: {
+            clientId: {type:"text"},
+            tenantId: {type:"text"},
+            clientSecret: {type:"password"}
+        },
     });
 </script>
 
@@ -18,6 +23,18 @@
     <div class="form-row">
         <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
         <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+    <div class="form-row">
+        <label for="node-input-clientId"><i class="fa fa-tag"></i> ClientId</label>
+        <input type="text" id="node-input-clientId">
+    </div>
+    <div class="form-row">
+        <label for="node-input-tenantId"><i class="fa fa-tag"></i> TenantId</label>
+        <input type="text" id="node-input-tenantId">
+    </div>
+    <div class="form-row">
+        <label for="node-input-clientSecret"><i class="fa fa-tag"></i> Client Secret</label>
+        <input type="password" id="node-input-clientSecret">
     </div>
 </script>
 
