@@ -7,11 +7,6 @@ module.exports = function (RED) {
         const tenantId = this.credentials.tenantId;
         node.on('input', async function (msg) {
             try {
-                /*var username = this.credentials.username;
-                var password = this.credentials.password;
-                node.warn(username);
-                node.warn(password);*/
-
                 // Get access token
                 const accessToken = await getAccessToken(msg);
 
@@ -55,8 +50,9 @@ module.exports = function (RED) {
         }
 
         async function sendEmail(accessToken, input) {
-            const userEmail = input.payload.userEmail;
-            const url = `https://graph.microsoft.com/v1.0/users/${userEmail}/sendMail`;
+            const senderUserEmail = input.payload.userEmail;
+            const userEmails = input.payload.address.split(',');
+            const url = `https://graph.microsoft.com/v1.0/users/${senderUserEmail}/sendMail`;
 
             const payload = {
                 message: {
@@ -65,13 +61,11 @@ module.exports = function (RED) {
                         contentType: "HTML",
                         content: input.payload.body
                     },
-                    toRecipients: [
-                        {
-                            emailAddress: {
-                                address: input.payload.address
-                            }
+                    toRecipients: userEmails.map(email => ({
+                        emailAddress: {
+                            address: email.trim()
                         }
-                    ]
+                    }))
                 },
                 saveToSentItems: "true"
             };
