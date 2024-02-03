@@ -2,8 +2,7 @@
   "name" : "node-red-contrib-example-microsoft-email",
   "node-red" : {
     "nodes": {
-      "microsoft-email": "microsoft-email.js",
-      "lower-case": "lower-case.js"
+      "microsoft-email": "microsoft-email.js"
     }
   }
 }
