@@ -1,5 +1,3 @@
-//const axios = require('axios');
-
 module.exports = function (RED) {
     function MicrosoftEmailNode(config) {
         RED.nodes.createNode(this, config);
@@ -9,11 +7,12 @@ module.exports = function (RED) {
             try {
                 node.warn("Belépési értéket");
                 node.warn(msg.payload);
+
                 // Get access token
                 const accessToken = await getAccessToken(msg);
 
                 // Send email using access token
-                await sendEmail(accessToken,msg);
+                await sendEmail(accessToken, msg);
 
                 console.log("Email sent successfully!");
 
@@ -25,7 +24,7 @@ module.exports = function (RED) {
             }
         });
 
-        async function getAccessToken( input) {
+        async function getAccessToken(input) {
             const clientId = input.payload.clientId;
             const clientSecret = input.payload.clientSecret;
             const tenantId = input.payload.tenantId;
@@ -33,23 +32,31 @@ module.exports = function (RED) {
             const url = `https://login.microsoftonline.com/${tenantId}/oauth2/v2.0/token`;
 
             node.warn("Ide is bejutok");
-            const payload = {
+            const payload = new URLSearchParams({
                 client_id: clientId,
                 scope: scope,
                 client_secret: clientSecret,
                 grant_type: "client_credentials"
-            };
+            });
 
             const headers = {
                 "Content-Type": "application/x-www-form-urlencoded"
             };
 
-            const response = await axios.post(url, payload, { headers });
-            return response.data.access_token;
+            const response = await fetch(url, {
+                method: 'POST',
+                body: payload,
+                headers: headers,
+            });
+            
+            const data = await response.json();
+            node.warn(data);
+            return data.access_token;
         }
 
-        async function sendEmail(accessToken,input) {
-            const url = "https://graph.microsoft.com/v1.0/users/kalauz.mate@scepiconsulting.hu/sendMail";
+        async function sendEmail(accessToken, input) {
+            const userEmail = input.payload.userEmail;
+            const url = `https://graph.microsoft.com/v1.0/users/${userEmail}/sendMail`;
 
             const payload = {
                 message: {
@@ -74,7 +81,11 @@ module.exports = function (RED) {
                 "Content-Type": "application/json"
             };
 
-            await axios.post(url, payload, { headers });
+            await fetch(url, {
+                method: 'POST',
+                body: JSON.stringify(payload),
+                headers: headers,
+            });
         }
     }
 
