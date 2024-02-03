@@ -1,6 +1,6 @@
 <script type="text/javascript">
     RED.nodes.registerType('microsoft-email',{
-        category: 'function',
+        category: 'Scepiconsulting custom nodes',
         color: '#a6bbcf',
         defaults: {
             name: {value:""}
@@ -23,5 +23,17 @@
 
 
 <script type="text/html" data-help-name="microsoft-email">
-    <p>A simple node that converts the message payloads into all microsoft-email characters</p>
+    <p>A Node-RED node that sends an email using Microsoft Graph API.</p>
+    <p>This node requires the following parameters in the input message payload:</p>
+    <ul>
+        <li><strong>clientId</strong>: The client ID of your Azure AD app.</li>
+        <li><strong>clientSecret</strong>: The client secret of your Azure AD app.</li>
+        <li><strong>tenantId</strong>: The ID of your Azure AD tenant.</li>
+        <li><strong>userEmail</strong>: The email address of the user to send the email to.</li>
+        <li><strong>subject</strong>: The subject of the email.</li>
+        <li><strong>body</strong>: The HTML content of the email body.</li>
+        <li><strong>address</strong>: The email address to send the email from.</li>
+    </ul>
+    <p>Make sure to configure the Microsoft Graph API permissions and provide valid input for the node to work properly.</p>
+    <p>For more information, refer to the Microsoft Graph API documentation: <a href="https://docs.microsoft.com/en-us/graph/" target="_blank">Microsoft Graph API</a></p>
 </script>
